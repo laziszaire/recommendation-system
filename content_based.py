@@ -16,7 +16,7 @@ class ContentRS:
     def fit(self, raw):
         """
 
-        :param X: features of items,
+        :param X: 待推荐物品的features of items,
         :return:
         """
         self.X_ = self.feature_extract(raw)
@@ -39,7 +39,7 @@ class ContentRS:
             raise ValueError('not fitted')
         _X = self.vectorizer.transform(X)
         similarities = linear_kernel(_X, self.X_)
-        item_idx = np.argsort(similarities, axis=1)[:, -2:-2-n_items:-1]
+        item_idx = np.argsort(similarities, axis=1)[:, -1:-1-n_items:-1]
         return item_idx
 
     # alias
