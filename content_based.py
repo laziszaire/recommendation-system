@@ -7,7 +7,8 @@ from sklearn.model_selection import train_test_split
 
 class ContentRS:
     """
-    content based recommendation system
+    content based recommendation system:
+    推荐【类似于用户喜欢过的物品的物品】
     """
     def __init__(self):
         pass
@@ -41,11 +42,14 @@ class ContentRS:
         item_idx = np.argsort(similarities, axis=1)[:, -2:-2-n_items:-1]
         return item_idx
 
-    #alias
+    # alias
     recommend = predict
 
 
 def test_content():
+    # test data: eCommerce Item Data
+    # https://www.kaggle.com/cclark/simple-content-based-recommendation-engine/data
+
     df = pd.read_csv('sample-data.csv', index_col=0)
     X_train, X_test = train_test_split(df, test_size=10)
     ct = ContentRS().fit(X_train['description'])
