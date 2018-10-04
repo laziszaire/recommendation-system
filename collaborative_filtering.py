@@ -4,15 +4,15 @@ import numpy as np
 
 class ColFilter:
     """
-
+    collaborative filtering
     """
     def __init__(self, similarity='Jaccard'):
         self.similarity = similarity
 
     def fit(self, user_item, rating_threshold=3):
         """
-
-        :param user_item:
+        fitting the user-user similarity matrix
+        :param user_item: 每个item是用户的一个特征
         :return:
         """
 
