@@ -51,7 +51,7 @@ def test_content():
     # https://www.kaggle.com/cclark/simple-content-based-recommendation-engine/data
 
     df = pd.read_csv('sample-data.csv', index_col=0)
-    X_train, X_test = train_test_split(df, test_size=10)
+    X_train, X_test = train_test_split(df, test_size=10, random_state=1)
     ct = ContentRS().fit(X_train['description'])
     preds = ct.predict(X_test['description'], n_items=3)
     recommended = ct.recommend(X_test['description'], n_items=3)
@@ -61,4 +61,7 @@ def test_content():
 
 if __name__ == "__main__":
     test_content()
+    # 喜欢t-shirt, 推荐的也是t-shirt
+    # Inter-continental品牌的pants：
+    #    推荐的也是Inter-continental capris，Inter-continental shorts，Solimar pants
 
