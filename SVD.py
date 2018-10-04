@@ -26,7 +26,7 @@ class SVDRec:
                 self.user_embedding[uid, :] -= learning_rate*grad_u
                 self.item_embedding[:, iid] -= learning_rate*grad_v
             RMSE = np.sqrt(np.nansum((self.user_embedding.dot(self.item_embedding) - user_item)**2)/len(user_idx))
-            print(RMSE)
+            print(f'RMSE:{RMSE}')
             n_epoch += 1
             if (RMSE <= rmse) or (n_epoch > max_epochs):
                 break
@@ -35,7 +35,6 @@ class SVDRec:
     def predict(self, user_id, item2pred=None, n_pred=5):
         if item2pred is None:
             item2pred = mask2index(np.isnan(self.user_item_[user_id, :]))[0]
-            print(f'待排序item: {item2pred}')
         uvec = self.user_embedding[user_id, :]
         scores = uvec.dot(self.item_embedding)
         pred = item2pred[np.argsort(scores[item2pred])[-1:-1-n_pred:-1]]
@@ -52,14 +51,19 @@ def test_SVDRec():
     v = np.abs(np.random.randn(10, 100))
     n_miss = 5000
     lr = .05
+    n_pred = 5
     user_item_true = u.dot(v)
     user_item = user_item_true.copy()
     miss_idx = np.random.choice(np.prod(user_item.shape), n_miss, replace=False)
     miss_idx = np.unravel_index(miss_idx, user_item.shape)
     user_item[miss_idx] = np.nan
     svd = SVDRec(n_components=10)
-    pred = svd.fit(user_item, learning_rate=lr, rmse=.1).predict(0)
-    print(pred)
+    pred = svd.fit(user_item, learning_rate=lr, rmse=.1).predict(0, n_pred=5)
+    to_pred = np.where(np.isnan(user_item[0, :]))[0]
+    true2pred = to_pred[np.argsort(user_item_true[0, to_pred])[-1:-1-n_pred:-1]]
+    print(f'truth is：{true2pred}')
+    print(f' svd pred is: {pred}')
+    assert np.any(np.isin(pred, true2pred))
 
 
 if __name__ == "__main__":
